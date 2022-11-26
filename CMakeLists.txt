@@ -1,4 +1,10 @@
+cmake_minimum_required(VERSION 3.24)
+
 project(gameoflife)
+set (CMAKE_CXX_STANDARD 20)
+add_compile_options(-Wall -Wextra -pedantic)
 
+include_directories(include src)
+link_libraries(sfml-graphics sfml-window sfml-system)
+add_executable(gameoflife src/main.cpp src/CGame.cpp)
 
-add_executable(gameoflife main.cpp)
