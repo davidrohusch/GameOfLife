@@ -1,5 +1,6 @@
 #pragma once
 #include "CCamera.hpp"
+#include "CGameboard.hpp"
 #include <SFML/Graphics.hpp>
 #include <cstddef>
 #include <iostream>
@@ -11,12 +12,14 @@ private:
   int speed = 60;
   sf::Clock clock;
   size_t gameSpeed = 60;
+  sf::Event eventBuffer;
+  Camera camera{0, 0, 0};
+  GameBoard gameboard;
+
   void handleEvents();
   void endStep();
   void Step();
   void handleKeyboardInputs();
-  sf::Event eventBuffer;
-  Camera camera{0, 0, 0};
 
 public:
   Game(int height, int width);

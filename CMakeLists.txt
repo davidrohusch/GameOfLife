@@ -6,5 +6,5 @@ add_compile_options(-Wall -Wextra -pedantic)
 
 include_directories(include src)
 link_libraries(sfml-graphics sfml-window sfml-system fmt)
-add_executable(gameoflife src/main.cpp src/CGame.cpp src/CCamera.cpp)
+add_executable(gameoflife src/main.cpp src/CGame.cpp src/CCamera.cpp src/CGameBoard.cpp)
 
