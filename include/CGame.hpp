@@ -1,17 +1,21 @@
 #pragma once
-#include <iostream>
 #include <SFML/Graphics.hpp>
+#include <cstddef>
+#include <iostream>
 #include <memory>
 
-class Game{
+class Game {
 private:
-    std::unique_ptr<sf::RenderWindow> window;
-    int speed = 60;
-    sf::Clock clock;
-    void handleEvents();
-public:
-    Game(int height, int width);
-    ~Game();
+  std::unique_ptr<sf::RenderWindow> window;
+  int speed = 60;
+  sf::Clock clock;
+  size_t gameSpeed = 60;
+  void handleEvents();
+  void endStep();
 
-    void run();
+public:
+  Game(int height, int width);
+  ~Game();
+
+  void run();
 };
