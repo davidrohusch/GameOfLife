@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 
 project(gameoflife)
 set (CMAKE_CXX_STANDARD 20)
-add_compile_options(-Wall -Wextra -pedantic)
+add_compile_options(-Wall -Wextra -pedantic -fsanitize=address)
 
 include_directories(include src)
 link_libraries(sfml-graphics sfml-window sfml-system)
