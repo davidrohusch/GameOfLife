@@ -17,8 +17,9 @@ private:
   GameBoard gameboard;
 
   void handleEvents();
-  void endStep();
+  void beginStep();
   void Step();
+  void endStep();
   void handleKeyboardInputs();
 
 public:

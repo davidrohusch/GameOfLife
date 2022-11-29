@@ -26,7 +26,6 @@ void Game::handleEvents() {
 };
 
 void Game::endStep() {
-  window->clear();
   window->display();
   clock.restart();
 }
@@ -41,12 +40,18 @@ void Game::handleKeyboardInputs() {
 
 }
 
+void Game::beginStep() {
+  window->clear();
+
+}
+
 void Game::Step() { handleKeyboardInputs(); }
 
 void Game::run() {
 
   while (window->isOpen()) {
     if (clock.getElapsedTime().asSeconds() >= 1.0f / speed) {
+      beginStep();
       Step();
       endStep();
     } else {
