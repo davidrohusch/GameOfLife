@@ -39,7 +39,7 @@ void Game::handleEvents() {
       }
       if (eventBuffer.key.code == sf::Keyboard::Left) {
         fmt::print("Speed down\n");
-        tickSpeed = std::max(tickSpeedMIN, tickSpeed - 1);
+        tickSpeed = std::max(tickSpeedMIN, std::min(tickSpeed - 1, tickSpeed));
       }
       if (eventBuffer.key.code == sf::Keyboard::Escape) {
         window->close();
@@ -74,7 +74,7 @@ void Game::beginStep() {
 
 void Game::Step() {
   handleKeyboardInputs();
-  camera.drawScene(gameboard);
+  camera.drawScene(gameboard, tickSpeed);
 }
 
 void Game::run() {

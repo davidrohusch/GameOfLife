@@ -12,7 +12,7 @@ class Game {
 private:
   const size_t frameRate = 60;
   const size_t tickSpeedMAX = 10;
-  const size_t tickSpeedMIN = 1;
+  const size_t tickSpeedMIN = 0;
   size_t tickSpeed = 5;
 
   std::shared_ptr<sf::RenderWindow> window;
