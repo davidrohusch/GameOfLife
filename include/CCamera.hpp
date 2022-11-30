@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <SFML/Graphics/Font.hpp>
+#include <string>
+#include <vector>
 
 class Camera {
 private:
@@ -16,4 +18,6 @@ private:
 public:
   Camera(int _x, int _y, int _zoom, std::shared_ptr<sf::RenderWindow> window);
   void drawScene(GameBoard &gamebaord, const int &gameSpeed);
+  void zoomUp();
+  void zoomDown();
 };

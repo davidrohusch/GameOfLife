@@ -1,6 +1,8 @@
 #include "CCamera.hpp"
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
-#include <string>
+#include <SFML/Graphics/Vertex.hpp>
+#include <SFML/System/Vector2.hpp>
 
 Camera::Camera(int _x, int _y, int _zoom,
                std::shared_ptr<sf::RenderWindow> _window)
@@ -11,7 +13,29 @@ void Camera::drawScene(GameBoard &gamebaord, const int &gameSpeed) {
   drawText(gameSpeed);
 }
 
-void Camera::drawGrid() {}
+void Camera::drawGrid() {
+
+  sf::Color defaultColor = sf::Color::Blue;
+  std::vector<sf::Vertex> vertices;
+  unsigned int x_pos = 0, y_pos = 0;
+  int spacing = (20 + zoom*10); // calculate from zoom
+  spacing = 70;
+  while (x_pos < window->getSize().x) {
+    vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, 0), defaultColor));
+    vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, window->getSize().y), defaultColor));
+    x_pos += spacing;
+  }
+
+
+  while (y_pos < window->getSize().y) {
+    vertices.push_back(sf::Vertex(sf::Vector2f(0, y_pos), defaultColor));
+    vertices.push_back(sf::Vertex(sf::Vector2f(window->getSize().x, y_pos), defaultColor));
+    y_pos += spacing;
+  }
+  // draw it
+ 
+  window->draw(vertices.data(), vertices.size(), sf::Lines);
+}
 
 void Camera::drawText(const int &gameSpeed) {
   sf::Text text;
@@ -34,11 +58,13 @@ void Camera::drawText(const int &gameSpeed) {
     speed = "PAUSED";
   else
     speed = std::to_string(gameSpeed);
-  
-  std::string format = "X: " + std::to_string(x) + " Y: " + std::to_string(y) + "  Zoom:" + std::to_string(zoom) + "%" + "   Speed: " + speed;
+
+  std::string format = "X: " + std::to_string(x) + " Y: " + std::to_string(y) +
+                       "  Zoom:" + std::to_string(zoom) + "%" +
+                       "   Speed: " + speed;
 
   // set the string to display
-  text.setString(format);   // jak to udělt lépe ?
+  text.setString(format); // jak to udělt lépe ?
 
   // set the character size
   text.setCharacterSize(16); // in pixels, not points!
