@@ -1,4 +1,6 @@
 #include "CGame.hpp"
+#include "CCamera.hpp"
+#include "CGameboard.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 #include <bits/iterator_concepts.h>
@@ -9,9 +11,8 @@
 #include <optional>
 #include <string>
 
-Game::Game(int height, int width) {
-  window = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height),
-                                              "Game of Life");
+Game::Game(int height, int width) : window (std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height),
+                                              "Game of Life")), camera(0,0,0,window) {
   window->setFramerateLimit(frameRate);
   window->setKeyRepeatEnabled(false);
 };
@@ -20,8 +21,9 @@ Game::~Game(){
 
 };
 
-void Game::debug_print(std::optional<std::string_view> text = std::nullopt) const {
-  if (text.has_value()){
+void Game::debug_print(
+    std::optional<std::string_view> text = std::nullopt) const {
+  if (text.has_value()) {
     fmt::print("{}\n", text.value());
   }
 }
@@ -55,7 +57,7 @@ void Game::handleEvents() {
 
 void Game::endStep() {
   window->display();
-  clock.restart();
+  framerateClock.restart();
 }
 
 [[maybe_unused]] void Game::handleKeyboardInputs() {
@@ -70,12 +72,15 @@ void Game::beginStep() {
   handleEvents();
 }
 
-void Game::Step() { handleKeyboardInputs(); }
+void Game::Step() {
+  handleKeyboardInputs();
+  camera.drawScene(gameboard);
+}
 
 void Game::run() {
 
   while (window->isOpen()) {
-    if (clock.getElapsedTime().asSeconds() >= 1.0f / frameRate) {
+    if (framerateClock.getElapsedTime().asSeconds() >= 1.0f / frameRate) {
       beginStep();
       Step();
       endStep();

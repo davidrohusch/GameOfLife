@@ -10,14 +10,16 @@
 
 class Game {
 private:
-  std::unique_ptr<sf::RenderWindow> window;
-  sf::Clock clock;
-  size_t frameRate = 60;
-  size_t tickSpeed = 5;
+  const size_t frameRate = 60;
   const size_t tickSpeedMAX = 10;
   const size_t tickSpeedMIN = 1;
+  size_t tickSpeed = 5;
+
+  std::shared_ptr<sf::RenderWindow> window;
+  sf::Clock framerateClock;
+
   sf::Event eventBuffer;
-  Camera camera{0, 0, 0};
+  Camera camera;
   GameBoard gameboard;
   sf::Color backgroundColor{255, 255, 255, 255};
 
