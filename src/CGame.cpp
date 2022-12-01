@@ -3,6 +3,7 @@
 #include "CGameboard.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/WindowStyle.hpp>
 #include <bits/iterator_concepts.h>
 #include <cstddef>
 #include <fmt/core.h>
@@ -11,8 +12,10 @@
 #include <optional>
 #include <string>
 
-Game::Game(int height, int width) : window (std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height),
-                                              "Game of Life")), camera(0,0,0,window) {
+Game::Game(int height, int width)
+    : window(std::make_shared<sf::RenderWindow>(
+          sf::VideoMode(width, height), "Game of Life", sf::Style::Close)),
+      camera(0, 0, 0, window) {
   window->setFramerateLimit(frameRate);
   window->setKeyRepeatEnabled(false);
 };
@@ -29,27 +32,9 @@ void Game::debug_print(
 }
 
 void Game::handleEvents() {
-
   while (window->pollEvent(eventBuffer)) {
+    handleKeyboardInputs();
 
-    if (eventBuffer.type == sf::Event::KeyPressed) {
-      if (eventBuffer.key.code == sf::Keyboard::Right) {
-        fmt::print("Speed up\n");
-        tickSpeed = std::min(tickSpeedMAX, tickSpeed + 1);
-      }
-      if (eventBuffer.key.code == sf::Keyboard::Left) {
-        fmt::print("Speed down\n");
-        tickSpeed = std::max(tickSpeedMIN, std::min(tickSpeed - 1, tickSpeed));
-      }
-      if (eventBuffer.key.code == sf::Keyboard::Escape) {
-        window->close();
-      }
-
-      if (eventBuffer.key.code == sf::Keyboard::D) {
-        debug_print(std::to_string(tickSpeed));
-        debug_print();
-      }
-    }
     if (eventBuffer.type == sf::Event::Closed)
       window->close();
   }
@@ -60,20 +45,42 @@ void Game::endStep() {
   framerateClock.restart();
 }
 
-[[maybe_unused]] void Game::handleKeyboardInputs() {
-  // TODO: zoom in zoom out with cooldown
-  // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-  //   fmt::print("xD\n");
-  // }
+void Game::handleKeyboardInputs() {
+  if (eventBuffer.type == sf::Event::KeyPressed) {
+    if (eventBuffer.key.code == sf::Keyboard::Right) {
+      fmt::print("Speed up\n");
+      tickSpeed = std::min(tickSpeedMAX, tickSpeed + 1);
+    }
+    if (eventBuffer.key.code == sf::Keyboard::Left) {
+      fmt::print("Speed down\n");
+      tickSpeed = std::max(tickSpeedMIN, std::min(tickSpeed - 1, tickSpeed));
+    }
+    if (eventBuffer.key.code == sf::Keyboard::Escape) {
+      window->close();
+    }
+
+    if (eventBuffer.key.code == sf::Keyboard::D) {
+      debug_print(std::to_string(tickSpeed));
+      debug_print();
+    }
+  }
+
+  if (eventBuffer.type == sf::Event::MouseWheelMoved) {
+    switch (eventBuffer.mouseWheel.delta) {
+    case -1:
+      camera.zoomUp();
+      break;
+    case 1:
+      camera.zoomDown();
+      break;
+    }
+  }
 }
 
-void Game::beginStep() {
-  window->clear(backgroundColor);
-  handleEvents();
-}
+void Game::beginStep() { window->clear(backgroundColor); }
 
 void Game::Step() {
-  handleKeyboardInputs();
+  handleEvents();
   camera.drawScene(gameboard, tickSpeed);
 }
 

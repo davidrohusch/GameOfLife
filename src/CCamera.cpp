@@ -19,7 +19,6 @@ void Camera::drawGrid() {
   std::vector<sf::Vertex> vertices;
   unsigned int x_pos = 0, y_pos = 0;
   int spacing = (20 + zoom*10); // calculate from zoom
-  spacing = 70;
   while (x_pos < window->getSize().x) {
     vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, 0), defaultColor));
     vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, window->getSize().y), defaultColor));
@@ -60,7 +59,7 @@ void Camera::drawText(const int &gameSpeed) {
     speed = std::to_string(gameSpeed);
 
   std::string format = "X: " + std::to_string(x) + " Y: " + std::to_string(y) +
-                       "  Zoom:" + std::to_string(zoom) + "%" +
+                       "  Zoom:" + std::to_string(zoom*10) + "%" +
                        "   Speed: " + speed;
 
   // set the string to display
@@ -75,4 +74,13 @@ void Camera::drawText(const int &gameSpeed) {
   // set the text style
   text.setStyle(sf::Text::Bold | sf::Text::Underlined);
   window->draw(text);
+}
+
+
+void Camera::zoomDown(){
+  if(zoom < maxZoom) zoom ++;
+}
+
+void Camera::zoomUp(){
+  if(zoom > 0) zoom --;
 }

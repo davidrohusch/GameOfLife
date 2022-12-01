@@ -11,6 +11,7 @@
 class Camera {
 private:
   int x, y, zoom;
+  const size_t maxZoom = 10;
   std::shared_ptr<sf::RenderWindow> window;
   void drawGrid();
   void drawText(const int &gameSpeed);
