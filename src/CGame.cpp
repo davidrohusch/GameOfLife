@@ -3,6 +3,7 @@
 #include "CGameboard.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 #include <bits/iterator_concepts.h>
 #include <cstddef>
@@ -34,6 +35,7 @@ void Game::debug_print(
 void Game::handleEvents() {
   while (window->pollEvent(eventBuffer)) {
     handleKeyboardInputs();
+    handleMouseInputs();
 
     if (eventBuffer.type == sf::Event::Closed)
       window->close();
@@ -43,6 +45,29 @@ void Game::handleEvents() {
 void Game::endStep() {
   window->display();
   framerateClock.restart();
+}
+
+void Game::handleMouseInputs(){
+  
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && eventBuffer.type == sf::Event::MouseMoved){
+    static size_t previousMouse_x, previousMouse_y;
+    //fmt::print("|x:{}|x:{},y:{}\n", previousMouse_x,eventBuffer.mouseMove.x, eventBuffer.mouseMove.y);
+
+    camera.move(previousMouse_x - eventBuffer.mouseMove.x, previousMouse_y - eventBuffer.mouseMove.y , Camera::MOVE_METHOD::RELATIVE);
+    previousMouse_x = eventBuffer.mouseMove.x;
+    previousMouse_y = eventBuffer.mouseMove.y;
+  }
+
+  if (eventBuffer.type == sf::Event::MouseWheelMoved) {
+    switch (eventBuffer.mouseWheel.delta) {
+    case -1:
+      camera.zoomUp();
+      break;
+    case 1:
+      camera.zoomDown();
+      break;
+    }
+  }
 }
 
 void Game::handleKeyboardInputs() {
@@ -61,20 +86,9 @@ void Game::handleKeyboardInputs() {
 
     if (eventBuffer.key.code == sf::Keyboard::D) {
       debug_print(std::to_string(tickSpeed));
-      debug_print();
     }
   }
 
-  if (eventBuffer.type == sf::Event::MouseWheelMoved) {
-    switch (eventBuffer.mouseWheel.delta) {
-    case -1:
-      camera.zoomUp();
-      break;
-    case 1:
-      camera.zoomDown();
-      break;
-    }
-  }
 }
 
 void Game::beginStep() { window->clear(backgroundColor); }

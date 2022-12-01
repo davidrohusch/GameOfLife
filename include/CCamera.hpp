@@ -18,7 +18,9 @@ private:
 
 public:
   Camera(int _x, int _y, int _zoom, std::shared_ptr<sf::RenderWindow> window);
+  enum class MOVE_METHOD { ABSOLUTE, RELATIVE };
   void drawScene(GameBoard &gamebaord, const int &gameSpeed);
   void zoomUp();
   void zoomDown();
+  void move(int x, int y, MOVE_METHOD method);
 };

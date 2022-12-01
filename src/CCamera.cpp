@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <fmt/core.h>
 
 Camera::Camera(int _x, int _y, int _zoom,
                std::shared_ptr<sf::RenderWindow> _window)
@@ -18,21 +19,22 @@ void Camera::drawGrid() {
   sf::Color defaultColor = sf::Color::Blue;
   std::vector<sf::Vertex> vertices;
   unsigned int x_pos = 0, y_pos = 0;
-  int spacing = (20 + zoom*10); // calculate from zoom
+  int spacing = (20 + zoom * 10); // calculate from zoom
   while (x_pos < window->getSize().x) {
     vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, 0), defaultColor));
-    vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, window->getSize().y), defaultColor));
+    vertices.push_back(
+        sf::Vertex(sf::Vector2f(x_pos, window->getSize().y), defaultColor));
     x_pos += spacing;
   }
 
-
   while (y_pos < window->getSize().y) {
     vertices.push_back(sf::Vertex(sf::Vector2f(0, y_pos), defaultColor));
-    vertices.push_back(sf::Vertex(sf::Vector2f(window->getSize().x, y_pos), defaultColor));
+    vertices.push_back(
+        sf::Vertex(sf::Vector2f(window->getSize().x, y_pos), defaultColor));
     y_pos += spacing;
   }
   // draw it
- 
+
   window->draw(vertices.data(), vertices.size(), sf::Lines);
 }
 
@@ -59,7 +61,7 @@ void Camera::drawText(const int &gameSpeed) {
     speed = std::to_string(gameSpeed);
 
   std::string format = "X: " + std::to_string(x) + " Y: " + std::to_string(y) +
-                       "  Zoom:" + std::to_string(zoom*10) + "%" +
+                       "  Zoom:" + std::to_string(zoom * 10) + "%" +
                        "   Speed: " + speed;
 
   // set the string to display
@@ -76,11 +78,21 @@ void Camera::drawText(const int &gameSpeed) {
   window->draw(text);
 }
 
-
-void Camera::zoomDown(){
-  if(zoom < maxZoom) zoom ++;
+void Camera::zoomDown() {
+  if (zoom < maxZoom)
+    zoom++;
 }
 
-void Camera::zoomUp(){
-  if(zoom > 0) zoom --;
+void Camera::zoomUp() {
+  if (zoom > 0)
+    zoom--;
+}
+
+void Camera::move(int _x, int _y, MOVE_METHOD method) {
+  if (method == MOVE_METHOD::RELATIVE) {
+    x += _x/2;
+    y += _y/2;
+
+    fmt::print("moved by {} {} \n", _x, _y);
+  }
 }

@@ -28,6 +28,7 @@ private:
   void Step();
   void endStep();
   void handleKeyboardInputs();
+  void handleMouseInputs();
 
   void debug_print(std::optional<std::string_view> text) const;
 
