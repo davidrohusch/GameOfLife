@@ -21,16 +21,18 @@ void Camera::drawGrid() {
   unsigned int x_pos = 0, y_pos = 0;
   int spacing = (20 + zoom * 10); // calculate from zoom
   while (x_pos < window->getSize().x) {
-    vertices.push_back(sf::Vertex(sf::Vector2f(x_pos, 0), defaultColor));
+    size_t position =  x_pos - x%spacing;
+    vertices.push_back(sf::Vertex(sf::Vector2f(position, 0), defaultColor));
     vertices.push_back(
-        sf::Vertex(sf::Vector2f(x_pos, window->getSize().y), defaultColor));
+        sf::Vertex(sf::Vector2f(position, window->getSize().y), defaultColor));
     x_pos += spacing;
   }
 
   while (y_pos < window->getSize().y) {
-    vertices.push_back(sf::Vertex(sf::Vector2f(0, y_pos), defaultColor));
+    size_t position =  y_pos - y%spacing;
+    vertices.push_back(sf::Vertex(sf::Vector2f(0, position), defaultColor));
     vertices.push_back(
-        sf::Vertex(sf::Vector2f(window->getSize().x, y_pos), defaultColor));
+        sf::Vertex(sf::Vector2f(window->getSize().x, position), defaultColor));
     y_pos += spacing;
   }
   // draw it
@@ -90,8 +92,8 @@ void Camera::zoomUp() {
 
 void Camera::move(int _x, int _y, MOVE_METHOD method) {
   if (method == MOVE_METHOD::RELATIVE) {
-    x += _x/2;
-    y += _y/2;
+    x += _x;
+    y += _y;
 
     fmt::print("moved by {} {} \n", _x, _y);
   }
