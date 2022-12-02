@@ -47,15 +47,28 @@ void Game::endStep() {
   framerateClock.restart();
 }
 
-void Game::handleMouseInputs(){
-  
-  if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && eventBuffer.type == sf::Event::MouseMoved){
-    static size_t previousMouse_x, previousMouse_y;
-    //fmt::print("|x:{}|x:{},y:{}\n", previousMouse_x,eventBuffer.mouseMove.x, eventBuffer.mouseMove.y);
+void Game::handleMouseInputs() {
+  static int previousMouse_x = sf::Mouse::getPosition().x,
+                previousMouse_y = sf::Mouse::getPosition().y;
 
-    camera.move(previousMouse_x - eventBuffer.mouseMove.x, previousMouse_y - eventBuffer.mouseMove.y , Camera::MOVE_METHOD::RELATIVE);
+  static bool canMove = false;
+
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
+      eventBuffer.type == sf::Event::MouseMoved) {
+    fmt::print("|x:{},y:{}|x:{},y:{}\n", previousMouse_x, previousMouse_y,
+               eventBuffer.mouseMove.x, eventBuffer.mouseMove.y);
+    // eventBuffer.mouseMove.y);
+
+    if (canMove)
+      camera.move(previousMouse_x - eventBuffer.mouseMove.x,
+                  previousMouse_y - eventBuffer.mouseMove.y,
+                  Camera::MOVE_METHOD::RELATIVE);
     previousMouse_x = eventBuffer.mouseMove.x;
     previousMouse_y = eventBuffer.mouseMove.y;
+    canMove = true;
+  }
+  if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+    canMove = false;
   }
 
   if (eventBuffer.type == sf::Event::MouseWheelMoved) {
@@ -88,7 +101,6 @@ void Game::handleKeyboardInputs() {
       debug_print(std::to_string(tickSpeed));
     }
   }
-
 }
 
 void Game::beginStep() { window->clear(backgroundColor); }
