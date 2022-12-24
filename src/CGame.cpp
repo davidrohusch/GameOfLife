@@ -15,8 +15,8 @@
 
 Game::Game(int height, int width)
     : window(std::make_shared<sf::RenderWindow>(
-          sf::VideoMode(width, height), "Game of Life", sf::Style::Close)),
-      camera(0, 0, 0, window) {
+          sf::VideoMode(width, height), "Game of Life", sf::Style::Close)), camera(width, height, 0, 0, 0, window),
+      gameboard({width,height}) {
   window->setFramerateLimit(frameRate);
   window->setKeyRepeatEnabled(false);
 };
@@ -55,8 +55,6 @@ void Game::handleMouseInputs() {
 
   if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
       eventBuffer.type == sf::Event::MouseMoved) {
-    fmt::print("|x:{},y:{}|x:{},y:{}\n", previousMouse_x, previousMouse_y,
-               eventBuffer.mouseMove.x, eventBuffer.mouseMove.y);
     // eventBuffer.mouseMove.y);
 
     if (canMove)

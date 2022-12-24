@@ -10,14 +10,16 @@
 
 class Camera {
 private:
+  int max_x, max_y;
   int x, y, zoom;
   const size_t maxZoom = 10;
   std::shared_ptr<sf::RenderWindow> window;
   void drawGrid();
   void drawText(const int &gameSpeed);
 
+
 public:
-  Camera(int _x, int _y, int _zoom, std::shared_ptr<sf::RenderWindow> window);
+  Camera(int max_x, int max_y, int _x, int _y, int _zoom, std::shared_ptr<sf::RenderWindow> window);
   enum class MOVE_METHOD { ABSOLUTE, RELATIVE };
   void drawScene(GameBoard &gamebaord, const int &gameSpeed);
   void zoomUp();
